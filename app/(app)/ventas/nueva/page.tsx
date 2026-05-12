@@ -88,7 +88,7 @@ export default function NuevaVentaPage() {
   function calcTotal() {
     const pxkg = parseFloat(form.pricePerKg);
     if (!pxkg || selectedIds.size === 0) return;
-    const totalKg = Array.from(selectedIds).reduce((s, id) => {
+    const totalKg = Array.from(selectedIds).reduce((s: number, id) => {
       const a = animales.find(a => a.id === id);
       return s + (a?.sessionRecords[0]?.weight ?? 0);
     }, 0);
@@ -101,7 +101,7 @@ export default function NuevaVentaPage() {
   const totalNeto = base - flete - comision;
 
   const animalesSeleccionados = animales.filter(a => selectedIds.has(a.id));
-  const pesoTotal = animalesSeleccionados.reduce((s, a) => s + (a.sessionRecords[0]?.weight ?? 0), 0);
+  const pesoTotal = animalesSeleccionados.reduce((s: number, a) => s + (a.sessionRecords[0]?.weight ?? 0), 0);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();

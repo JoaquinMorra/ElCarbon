@@ -103,7 +103,7 @@ export default function RodeoPage() {
   const resumenCat = CATEGORIAS.map(cat => ({
     ...cat,
     count: activos.filter(a => a.categoria === cat.value).length,
-    conteoManual: conteos.filter(c => c.categoria === cat.value).reduce((s, c) => s + c.cantidad, 0),
+    conteoManual: conteos.filter(c => c.categoria === cat.value).reduce((s: number, c) => s + c.cantidad, 0),
   }));
   const sinCategoria = activos.filter(a => !a.categoria).length;
 

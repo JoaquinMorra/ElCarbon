@@ -82,7 +82,7 @@ export default function LotesPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {lotes.map(lote => {
             const animales = lote.animalHistory.map(h => h.animal);
-            const pesoTotal = animales.reduce((s, a) => s + (a.sessionRecords[0]?.weight ?? 0), 0);
+            const pesoTotal = animales.reduce((s: number, a) => s + (a.sessionRecords[0]?.weight ?? 0), 0);
             const pesoPromedio = animales.length > 0 ? pesoTotal / animales.length : 0;
             return (
               <div key={lote.id} className="bg-white border border-gray-200 rounded-xl p-5">

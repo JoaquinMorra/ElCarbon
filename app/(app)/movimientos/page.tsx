@@ -123,8 +123,8 @@ export default function MovimientosPage() {
     await cargar();
   }
 
-  const totalIngresos = movimientos.filter(m => m.tipo === "INGRESO").reduce((s, m) => s + m.monto, 0);
-  const totalEgresos = movimientos.filter(m => m.tipo === "EGRESO").reduce((s, m) => s + m.monto, 0);
+  const totalIngresos = movimientos.filter(m => m.tipo === "INGRESO").reduce((s: number, m) => s + m.monto, 0);
+  const totalEgresos = movimientos.filter(m => m.tipo === "EGRESO").reduce((s: number, m) => s + m.monto, 0);
   const saldo = totalIngresos - totalEgresos;
   const grupos = agruparPorMes(movimientos);
   const categorias = tipo === "EGRESO" ? CATEGORIAS_EGRESO : CATEGORIAS_INGRESO;
