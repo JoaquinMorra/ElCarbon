@@ -12,7 +12,7 @@ export default async function VentasPage() {
     include: { animals: true },
   });
 
-  const total = ventas.reduce((s: number, v) => s + v.totalAmount - v.freightCost - v.commission, 0);
+  const total = ventas.reduce((s: number, v: { totalAmount: number; freightCost: number; commission: number }) => s + v.totalAmount - v.freightCost - v.commission, 0);
 
   return (
     <div>

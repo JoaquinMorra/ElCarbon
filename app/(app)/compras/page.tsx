@@ -12,7 +12,7 @@ export default async function ComprasPage() {
     include: { animals: true },
   });
 
-  const total = compras.reduce((s: number, c) => s + c.totalAmount + c.freightCost + c.commission, 0);
+  const total = compras.reduce((s: number, c: { totalAmount: number; freightCost: number; commission: number }) => s + c.totalAmount + c.freightCost + c.commission, 0);
 
   return (
     <div>
