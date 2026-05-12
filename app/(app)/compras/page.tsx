@@ -36,7 +36,7 @@ export default async function ComprasPage() {
         </div>
       ) : (
         <div className="flex flex-col gap-3">
-          {compras.map((c) => {
+          {compras.map((c: typeof compras[number]) => {
             const neto = c.totalAmount + c.freightCost + c.commission;
             return (
               <div key={c.id} className="bg-white border border-gray-200 rounded-xl px-5 py-4">
