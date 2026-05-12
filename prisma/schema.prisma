@@ -1,0 +1,206 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Animal {
+  id          String         @id @default(cuid())
+  eid         String         @unique
+  visualTag   String?
+  sex         String
+  color       String?
+  birthDate   DateTime?
+  breed       String?
+  categoria   CategoriaAnimal?
+  status      AnimalStatus   @default(ACTIVE)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  sessionRecords  SessionRecord[]
+  lotHistory      AnimalLotHistory[]
+  healthRecords   HealthRecord[]
+  purchaseAnimals PurchaseAnimal[]
+  saleAnimals     SaleAnimal[]
+}
+
+model Session {
+  id        String      @id @default(cuid())
+  name      String
+  type      SessionType
+  date      DateTime
+  notes     String?
+  createdAt DateTime    @default(now())
+
+  records       SessionRecord[]
+  healthRecords HealthRecord[]
+}
+
+model SessionRecord {
+  id        String   @id @default(cuid())
+  sessionId String
+  animalId  String
+  weight    Float?
+  pregnant  Boolean?
+  notes     String?
+  createdAt DateTime @default(now())
+
+  session Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  animal  Animal  @relation(fields: [animalId], references: [id], onDelete: Cascade)
+}
+
+model Lot {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+
+  animalHistory AnimalLotHistory[]
+}
+
+model AnimalLotHistory {
+  id        String    @id @default(cuid())
+  animalId  String
+  lotId     String
+  entryDate DateTime
+  exitDate  DateTime?
+
+  animal Animal @relation(fields: [animalId], references: [id], onDelete: Cascade)
+  lot    Lot    @relation(fields: [lotId], references: [id], onDelete: Cascade)
+}
+
+model HealthRecord {
+  id        String   @id @default(cuid())
+  animalId  String
+  sessionId String?
+  type      String
+  product   String
+  dose      String?
+  date      DateTime
+  notes     String?
+  createdAt DateTime @default(now())
+
+  animal  Animal   @relation(fields: [animalId], references: [id], onDelete: Cascade)
+  session Session? @relation(fields: [sessionId], references: [id], onDelete: SetNull)
+}
+
+model Purchase {
+  id           String   @id @default(cuid())
+  date         DateTime
+  seller       String
+  pricePerKg   Float?
+  pricePerHead Float?
+  totalAmount  Float
+  freightCost  Float    @default(0)
+  commission   Float    @default(0)
+  notes        String?
+  createdAt    DateTime @default(now())
+
+  animals   PurchaseAnimal[]
+}
+
+model PurchaseAnimal {
+  id               String @id @default(cuid())
+  purchaseId       String
+  animalId         String
+  weightAtPurchase Float?
+
+  purchase Purchase @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+  animal   Animal   @relation(fields: [animalId], references: [id], onDelete: Cascade)
+}
+
+model Sale {
+  id           String   @id @default(cuid())
+  date         DateTime
+  buyer        String
+  pricePerKg   Float?
+  pricePerHead Float?
+  totalAmount  Float
+  freightCost  Float    @default(0)
+  commission   Float    @default(0)
+  notes        String?
+  createdAt    DateTime @default(now())
+
+  animals   SaleAnimal[]
+}
+
+model SaleAnimal {
+  id           String @id @default(cuid())
+  saleId       String
+  animalId     String
+  weightAtSale Float?
+
+  sale   Sale   @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  animal Animal @relation(fields: [animalId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+}
+
+model ConteoManual {
+  id         String          @id @default(cuid())
+  categoria  CategoriaAnimal
+  cantidad   Int
+  fecha      DateTime        @default(now())
+  notas      String?
+  createdAt  DateTime        @default(now())
+}
+
+model Movimiento {
+  id          String           @id @default(cuid())
+  tipo        MovimientoTipo
+  categoria   String
+  descripcion String
+  adjunto     String?
+  adjuntoNombre String?
+  monto       Float
+  fecha       DateTime
+  comprobante String?
+  notas       String?
+  createdAt   DateTime         @default(now())
+}
+
+model Document {
+  id         String   @id @default(cuid())
+  entityType String
+  entityId   String
+  filename   String
+  filepath   String
+  filesize   Int
+  createdAt  DateTime @default(now())
+}
+
+enum AnimalStatus {
+  ACTIVE
+  SOLD
+  DEAD
+}
+
+enum SessionType {
+  WEIGHING
+  VACCINATION
+  MOVEMENT
+  PREG_CHECK
+  OTHER
+}
+
+enum MovimientoTipo {
+  INGRESO
+  EGRESO
+}
+
+enum CategoriaAnimal {
+  VACA_MADRE
+  VAQUILLONA
+  TERNERO
+  TERNERA
+  TORO
+  NOVILLO
+}
