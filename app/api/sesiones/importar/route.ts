@@ -84,9 +84,9 @@ export async function POST(req: Request) {
             tactoRaw.toLowerCase()
           );
 
-    if (!eid.trim()) continue;
-
-    const eidClean = eid.trim();
+    // Si no hay IDE pero hay IDV, usar IDV como identificador
+    const eidClean = eid.trim() || (visualTag?.trim() ? `IDV-${visualTag.trim()}` : "");
+    if (!eidClean) continue;
 
     const wasNew = !(await prisma.animal.findUnique({ where: { eid: eidClean } }));
 
