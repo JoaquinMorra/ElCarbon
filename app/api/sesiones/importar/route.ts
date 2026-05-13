@@ -27,6 +27,8 @@ export async function POST(req: Request) {
       skip_empty_lines: true,
       trim: true,
       delimiter,
+      relax_quotes: true,
+      relax_column_count: true,
     });
   } catch {
     return NextResponse.json({ error: "Archivo CSV inválido" }, { status: 400 });
