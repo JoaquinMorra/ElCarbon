@@ -27,7 +27,7 @@ export async function POST(req: Request) {
       skip_empty_lines: true,
       trim: true,
       delimiter,
-      relax_quotes: true,
+      quote: false,
       relax_column_count: true,
     });
   } catch {

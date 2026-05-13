@@ -53,7 +53,7 @@ export default function NuevaVentaPage() {
     const text = await file.text();
     let rows: Record<string, string>[];
     try {
-      rows = parse(text, { columns: true, skip_empty_lines: true, trim: true, delimiter: detectDelimiter(text), relax_quotes: true, relax_column_count: true });
+      rows = parse(text, { columns: true, skip_empty_lines: true, trim: true, delimiter: detectDelimiter(text), quote: false, relax_column_count: true });
     } catch {
       setCsvError("No se pudo leer el archivo CSV");
       return;
