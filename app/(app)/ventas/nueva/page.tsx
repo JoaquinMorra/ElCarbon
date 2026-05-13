@@ -59,23 +59,33 @@ export default function NuevaVentaPage() {
       return;
     }
 
-    const eidsCSV = rows
-      .map(r => (r["IDE"] ?? r["EID"] ?? r["eid"] ?? r["Tag"] ?? "").trim())
-      .filter(Boolean);
+    const tieneIDE = rows.some(r => r["IDE"] ?? r["EID"] ?? r["eid"] ?? r["Tag"]);
+    const tieneIDV = rows.some(r => r["IDV"] ?? r["idv"]);
 
-    if (eidsCSV.length === 0) {
+    if (!tieneIDE && !tieneIDV) {
       setCsvError("No se encontraron caravanas en el archivo");
       return;
     }
 
     const activos = animales.filter(a => a.status === "ACTIVE");
-    const encontrados = activos.filter(a => eidsCSV.includes(a.eid));
-    const noEncontrados = eidsCSV.filter(eid => !activos.find(a => a.eid === eid));
+    let encontrados: Animal[] = [];
+    let noEncontrados: string[] = [];
+
+    if (tieneIDE) {
+      const eidsCSV = rows.map(r => (r["IDE"] ?? r["EID"] ?? r["eid"] ?? r["Tag"] ?? "").trim()).filter(Boolean);
+      encontrados = activos.filter(a => eidsCSV.includes(a.eid));
+      noEncontrados = eidsCSV.filter(eid => !activos.find(a => a.eid === eid));
+    } else {
+      // Buscar por número de caravana visual (IDV)
+      const idvsCSV = rows.map(r => (r["IDV"] ?? r["idv"] ?? "").trim()).filter(Boolean);
+      encontrados = activos.filter(a => a.visualTag && idvsCSV.includes(a.visualTag));
+      noEncontrados = idvsCSV.filter(idv => !activos.find(a => a.visualTag === idv));
+    }
 
     setSelectedIds(new Set(encontrados.map(a => a.id)));
 
     if (noEncontrados.length > 0) {
-      setCsvError(`${encontrados.length} animales cargados. ${noEncontrados.length} EID no encontrados en el rodeo: ${noEncontrados.slice(0, 3).join(", ")}${noEncontrados.length > 3 ? "..." : ""}`);
+      setCsvError(`${encontrados.length} animales cargados. ${noEncontrados.length} no encontrados en el rodeo: ${noEncontrados.slice(0, 3).join(", ")}${noEncontrados.length > 3 ? "..." : ""}`);
     }
   }
 
